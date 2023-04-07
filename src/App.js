@@ -4,6 +4,7 @@ import SpeechRecognition, {
 } from 'react-speech-recognition';
 import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
+import { Button } from 'react-bootstrap';
 
 import chalkboard from './assets/chalkboard.jpg';
 import { paragraph, sentence } from 'txtgen';
@@ -88,6 +89,19 @@ const Dictaphone = () => {
       setHistory((prevHistory) => [...prevHistory, score]);
     }
   }
+
+  const getBackgroundColor = (score) => {
+    if (score >= 90) {
+      return 'green';
+    } else if (score >= 70) {
+      return 'yellow';
+    } else if (score >= 50) {
+      return 'orange';
+    } else {
+      return 'red';
+    }
+  };
+
   const displayhistory = history.map((item, index) => (
     <li
       key={index}
@@ -95,7 +109,7 @@ const Dictaphone = () => {
         width: '600px',
         paddingTop: '10px',
         paddingBottom: '10px',
-        background: 'red',
+        backgroundColor: getBackgroundColor(item),
       }}
     >
       {item}
@@ -103,14 +117,9 @@ const Dictaphone = () => {
   ));
 
   return (
-    <div
-      style={{
-        height: '100vh',
-        backgroundSize: '100% 100%',
-        background:
-          'linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)',
-      }}
-    >
+    <div style={{ height: '100vh', 
+                  backgroundSize: '100% 100%', 
+                  background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
 
@@ -140,7 +149,7 @@ const Dictaphone = () => {
                 height: '58vh',
                 alignItems: 'center',
                 marginTop: 40,
-                backgroundSize: 'cover',
+                backgroundSize: '100% 100%',
                 backgroundImage: `url(${chalkboard})`,
               }}
             >
@@ -165,20 +174,25 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p style={{
+                color: 'white',
+                fontWeight: 500,
+                fontSize: '0.8em',
+                marginTop: 10,
+              }}>Microphone: {micOn ? 'on' : 'off'}</p>
               <div>
-                <button style={{ marginRight: 20 }} onClick={handleListening}>
+                <Button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
-                </button>{' '}
+                </button>
                 <button
                   style={{ marginRight: 20 }}
                   onClick={handleStopListening}
                 >
                   Stop
-                </button>
-                <button style={{}} onClick={handleResetTranscript}>
+                </Button>
+                <Button style={{}} onClick={handleResetTranscript}>
                   Reset
-                </button>
+                </Button>
               </div>
             </div>
             <p>{transcript}</p>
@@ -195,7 +209,9 @@ const Dictaphone = () => {
               >
                 {displayhistory}
               </ul>
-              <button onClick={() => updateScore(score)}>Update Score</button>
+              <button onClick={() => updateScore(score)}>
+                Update Score
+              </button>
             </div>
           </div>
         </ParallaxLayer>
