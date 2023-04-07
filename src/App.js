@@ -6,8 +6,9 @@ import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 
 import chalkboard from './assets/chalkboard.jpg';
-
+import { paragraph, sentence } from 'txtgen';
 const Dictaphone = () => {
+  const [para,setPara] = useState(paragraph(3));
   const [micOn, setMicOn] = useState(false);
   const {
     transcript,
@@ -35,12 +36,14 @@ const Dictaphone = () => {
   const handleResetTranscript = () => {
     handleStopListening();
     resetTranscript();
+    setPara(paragraph(3));
   };
-
   return (
-    <div style={{ height: '100vh', backgroundSize: '100% 100%' }}>
+    <div style={{ height: '100vh', backgroundSize: '100% 100%', background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)"
+  }}>
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
+        
         <ParallaxLayer>
           <div
             style={{
@@ -50,6 +53,11 @@ const Dictaphone = () => {
               flexDirection: 'column',
             }}
           >
+            <p style={{
+                    color: 'white',
+                    fontWeight: 500,
+                    fontSize: '2em',
+                  }}>SpeechRacer</p>
             <div
               style={{
                 display: 'flex',
@@ -58,6 +66,7 @@ const Dictaphone = () => {
                 height: '58vh',
                 alignItems: 'center',
                 marginTop: 40,
+                backgroundSize: 'cover',
                 backgroundImage: `url(${chalkboard})`,
               }}
             >
@@ -78,9 +87,7 @@ const Dictaphone = () => {
                     fontSize: '0.8em',
                   }}
                   cursorColor="white"
-                  multiText={[
-                    "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it. It's really as simple as that. While everyone else is searching for what they can sell, I sit in front of my computer and buy better stuff for less money and spend a fraction of the time doing it.",
-                  ]}
+                  multiText= {[para]}
                   typeSpeed={50}
                 />
               </div>
@@ -93,11 +100,15 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p style={{
+                    color: 'white',
+                    fontWeight: 500,
+                    fontSize: '0.8em',
+                  }}>Microphone: {micOn ? 'on' : 'off'}</p>
               <div>
                 <button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
-                </button>
+                </button>{' '}
                 <button
                   style={{ marginRight: 20 }}
                   onClick={handleStopListening}
