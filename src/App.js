@@ -1,40 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, Text } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
-
-import chalkboard from './assets/chalkboard.jpg';
+import { Button } from 'react-bootstrap';
 import { paragraph, sentence } from 'txtgen';
+import chalkboard from './assets/chalkboard.jpg';
+
 const Dictaphone = () => {
-  const [para, setPara] = useState(paragraph(3));
   const [micOn, setMicOn] = useState(false);
+  const [score, setScore] = useState(false);
+  const [performance, setPerformance] = useState(false);
+  const [history, setHistory] = useState([]);
+
+  const [para, setPara] = useState(paragraph(3));
   const [TypeWrite, setTypewrite] = useState();
   const [clear, setClear] = useState(0);
 
   let pararender = '';
+
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
-  // const TypeWrite = () => {
-  //   return(
-  //     <TypeWriterEffect
-  //       textStyle={{
-  //         color: 'white',
-  //         fontWeight: 500,
-  //         fontSize: '0.8em',
-  //       }}
-  //       cursorColor="white"
-  //       multiText= {para}
-  //       typeSpeed={50}
-  //     />
-  //   )
-  // }
 
   //Clear and rereference TypeWriterEffect Componenet
   useEffect(() => {
@@ -70,13 +61,78 @@ const Dictaphone = () => {
     SpeechRecognition.stopListening();
     setMicOn(false);
     console.log('mic is off');
+    scoring(
+      transcript,
+      "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it."
+    );
   };
 
   const handleResetTranscript = () => {
     handleStopListening();
     resetTranscript();
+    setScore(false);
+    setPerformance(false);
     setPara(paragraph(3));
   };
+
+  const scoring = (s1, s2) => {
+    // Convert both strings to lowercase
+    s1 = s1.toLowerCase();
+    s2 = s2.toLowerCase();
+
+    // Initialize the distance matrix
+    var d = [];
+    for (var i = 0; i <= s1.length; i++) {
+      d[i] = [];
+      d[i][0] = i;
+    }
+    for (var j = 0; j <= s2.length; j++) {
+      d[0][j] = j;
+    }
+
+    // Fill in the rest of the matrix
+    for (var i = 1; i <= s1.length; i++) {
+      for (var j = 1; j <= s2.length; j++) {
+        if (s1[i - 1] == s2[j - 1]) {
+          d[i][j] = d[i - 1][j - 1];
+        } else {
+          d[i][j] = Math.min(
+            d[i - 1][j] + 1, // Deletion
+            d[i][j - 1] + 1, // Insertion
+            d[i - 1][j - 1] + 1 // Substitution
+          );
+        }
+      }
+    }
+
+    // Return the Levenshtein distance
+    let score = Math.round(
+      (1 - d[s1.length][s2.length] / Math.max(s1.length, s2.length)) * 100
+    );
+    setScore(score);
+    setPerformance(score + '/100');
+    updateScore(score);
+  };
+
+  function updateScore(score) {
+    if (score) {
+      setHistory((prevHistory) => [...prevHistory, score]);
+    }
+  }
+  const displayhistory = history.map((item, index) => (
+    <li
+      key={index}
+      style={{
+        width: '600px',
+        paddingTop: '10px',
+        paddingBottom: '10px',
+        background: 'red',
+      }}
+    >
+      {item}
+    </li>
+  ));
+
   return (
     <div
       style={{
@@ -88,7 +144,6 @@ const Dictaphone = () => {
     >
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
-
         <ParallaxLayer>
           <div
             style={{
@@ -115,7 +170,7 @@ const Dictaphone = () => {
                 height: '58vh',
                 alignItems: 'center',
                 marginTop: 40,
-                backgroundSize: 'cover',
+                backgroundSize: '100% 100%',
                 backgroundImage: `url(${chalkboard})`,
               }}
             >
@@ -129,6 +184,18 @@ const Dictaphone = () => {
                   marginLeft: 10,
                 }}
               >
+                {/* <TypeWriterEffect
+                  textStyle={{
+                    color: 'white',
+                    fontWeight: 500,
+                    fontSize: '0.8em',
+                  }}
+                  cursorColor="white"
+                  multiText={[
+                    "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it.",
+                  ]}
+                  typeSpeed={50}
+                /> */}
                 {TypeWrite}
               </div>
             </div>
@@ -145,26 +212,41 @@ const Dictaphone = () => {
                   color: 'white',
                   fontWeight: 500,
                   fontSize: '0.8em',
+                  marginTop: 10,
                 }}
               >
                 Microphone: {micOn ? 'on' : 'off'}
               </p>
               <div>
-                <button style={{ marginRight: 20 }} onClick={handleListening}>
+                <Button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
-                </button>{' '}
-                <button
+                </Button>
+                <Button
                   style={{ marginRight: 20 }}
                   onClick={handleStopListening}
                 >
                   Stop
-                </button>
-                <button style={{}} onClick={handleResetTranscript}>
+                </Button>
+                <Button style={{}} onClick={handleResetTranscript}>
                   Reset
-                </button>
+                </Button>
               </div>
             </div>
             <p>{transcript}</p>
+            <br></br>
+            <p>Score: {score ? performance : '-'}</p>
+            <div style={{ textAlign: 'center' }}>
+              {history.length > 0 ? <p>Score History</p> : <p></p>}
+              <ul
+                style={{
+                  listStyle: 'none',
+                  textAlign: 'center',
+                  paddingLeft: '0px',
+                }}
+              >
+                {displayhistory}
+              </ul>
+            </div>
           </div>
         </ParallaxLayer>
       </Parallax>
