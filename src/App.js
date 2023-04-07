@@ -92,8 +92,31 @@ const Dictaphone = () => {
       setHistory((prevHistory) => [...prevHistory, score]);
     }
   }
+
+  const getBackgroundColor = (score) => {
+    if (score >= 90) {
+      return 'green';
+    } else if (score >= 70) {
+      return 'yellow';
+    } else if (score >= 50) {
+      return 'orange';
+    } else {
+      return 'red';
+    }
+  };
+
   const displayhistory = history.map((item, index) => (
-    <li key={index} style={{width:'600px',paddingTop: '10px', paddingBottom:'10px', background:'red'}}>{item}</li>
+    <li
+      key={index}
+      style={{
+        width: '600px',
+        paddingTop: '10px',
+        paddingBottom: '10px',
+        backgroundColor: getBackgroundColor(item),
+      }}
+    >
+      {item}
+    </li>
   ));
 
   return (
