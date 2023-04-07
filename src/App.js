@@ -1,10 +1,9 @@
-import React, { useState, useEffect, Text } from 'react';
+import React, { useEffect, useState } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
-import { Button } from 'react-bootstrap';
 
 import chalkboard from './assets/chalkboard.jpg';
 import { paragraph, sentence } from 'txtgen';
@@ -71,55 +70,22 @@ const Dictaphone = () => {
     SpeechRecognition.stopListening();
     setMicOn(false);
     console.log('mic is off');
-    scoring(
-      transcript,
-      "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it."
-    );
   };
 
   const handleResetTranscript = () => {
     handleStopListening();
     resetTranscript();
     setPara(paragraph(3));
-    console.log(para);
   };
-
-  function updateScore(score) {
-    if (score) {
-      setHistory((prevHistory) => [...prevHistory, score]);
-    }
-  }
-
-  const getBackgroundColor = (score) => {
-    if (score >= 90) {
-      return 'green';
-    } else if (score >= 70) {
-      return 'yellow';
-    } else if (score >= 50) {
-      return 'orange';
-    } else {
-      return 'red';
-    }
-  };
-
-  const displayhistory = history.map((item, index) => (
-    <li
-      key={index}
+  return (
+    <div
       style={{
-        width: '600px',
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        backgroundColor: getBackgroundColor(item),
+        height: '100vh',
+        backgroundSize: '100% 100%',
+        background:
+          'linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)',
       }}
     >
-      {item}
-    </li>
-  ));
-
-  return (
-    <div style={{ height: '100vh', 
-                  backgroundSize: '100% 100%', 
-                  background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
 
@@ -149,7 +115,7 @@ const Dictaphone = () => {
                 height: '58vh',
                 alignItems: 'center',
                 marginTop: 40,
-                backgroundSize: '100% 100%',
+                backgroundSize: 'cover',
                 backgroundImage: `url(${chalkboard})`,
               }}
             >
@@ -174,45 +140,31 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p style={{
-                color: 'white',
-                fontWeight: 500,
-                fontSize: '0.8em',
-                marginTop: 10,
-              }}>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p
+                style={{
+                  color: 'white',
+                  fontWeight: 500,
+                  fontSize: '0.8em',
+                }}
+              >
+                Microphone: {micOn ? 'on' : 'off'}
+              </p>
               <div>
-                <Button style={{ marginRight: 20 }} onClick={handleListening}>
+                <button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
-                </button>
+                </button>{' '}
                 <button
                   style={{ marginRight: 20 }}
                   onClick={handleStopListening}
                 >
                   Stop
-                </Button>
-                <Button style={{}} onClick={handleResetTranscript}>
+                </button>
+                <button style={{}} onClick={handleResetTranscript}>
                   Reset
-                </Button>
+                </button>
               </div>
             </div>
             <p>{transcript}</p>
-            <br></br>
-            <p>Score: {score ? performance : '-'}</p>
-            <div style={{ textAlign: 'center' }}>
-              {history.length > 0 ? <p>Score History</p> : <p></p>}
-              <ul
-                style={{
-                  listStyle: 'none',
-                  textAlign: 'center',
-                  paddingLeft: '0px',
-                }}
-              >
-                {displayhistory}
-              </ul>
-              <button onClick={() => updateScore(score)}>
-                Update Score
-              </button>
-            </div>
           </div>
         </ParallaxLayer>
       </Parallax>
