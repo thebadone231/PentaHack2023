@@ -92,6 +92,9 @@ const Dictaphone = () => {
       setHistory((prevHistory) => [...prevHistory, score]);
     }
   }
+  const displayhistory = history.map((item, index) => (
+    <li key={index} style={{width:'600px',paddingTop: '10px', paddingBottom:'10px', background:'red'}}>{item}</li>
+  ));
 
   return (
     <div style={{ height: '100vh', 
@@ -181,11 +184,14 @@ const Dictaphone = () => {
             <p>{transcript}</p>
             <br></br>
             <p>Score: {score ? performance : '-'}</p>
-            <div>
+            <div style={{textAlign:'center',}}>
               {history.length > 0 ? <p>Score History</p> : <p></p>}
-              {history.map((item, index) => (
-                <p key={index}>{item}</p>
-              ))}
+              <ul style={{listStyle: 'none', textAlign:'center',paddingLeft :'0px' }}>
+                {displayhistory}
+              </ul>
+              <button onClick={() => updateScore(score)}>
+                Update Score
+              </button>
             </div>
           </div>
         </ParallaxLayer>
