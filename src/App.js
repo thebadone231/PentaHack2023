@@ -12,7 +12,7 @@ import chalkboard from './assets/chalkboard.jpg';
 const Dictaphone = () => {
   const [micOn, setMicOn] = useState(false);
   const [score, setScore] = useState(false);
-  const [para, setPara] = useState(paragraph(2));
+  const [para, setPara] = useState(paragraph(1));
   const [performance, setPerformance] = useState(false);
   const [history, setHistory] = useState([]);
   const [TypeWrite, setTypewrite] = useState()
@@ -67,7 +67,7 @@ const Dictaphone = () => {
     resetTranscript();
     setScore(false);
     setPerformance(false);
-    setPara(paragraph(2));
+    setPara(paragraph(1));
   };
 
   const scoring = (s1, s2) => {
@@ -119,7 +119,7 @@ const Dictaphone = () => {
     if (score >= 90) {
       return 'green';
     } else if (score >= 70) {
-      return 'yellow';
+      return 'gold';
     } else if (score >= 50) {
       return 'orange';
     } else {
@@ -163,7 +163,7 @@ const Dictaphone = () => {
             <p style={{
               color: 'white',
               fontWeight: 500,
-              fontSize: '2em',
+              fontSize: '4em',
             }}>SpeechRacer</p>
             <div
               style={{
@@ -184,8 +184,9 @@ const Dictaphone = () => {
                   display: 'flex',
                   alignItems: 'center',
                   color: 'white',
-                  fontSize: '1.5em',
+                  fontSize: '3em',
                   marginLeft: 10,
+                  textAlign: 'center',
                 }}
               >
                 {TypeWrite}
@@ -219,7 +220,7 @@ const Dictaphone = () => {
                   fontSize: '1.2em',
                   marginTop: 10,
                 }}>
-              <p>Your output</p>
+              <p>Your output:</p>
             </div>
             <div style={{
                   height: '100%',
