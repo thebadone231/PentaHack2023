@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
@@ -8,7 +8,7 @@ import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 import chalkboard from './assets/chalkboard.jpg';
 import { paragraph, sentence } from 'txtgen';
 const Dictaphone = () => {
-  const [para,setPara] = useState(paragraph(3));
+  const [para, setPara] = useState(paragraph(3));
   const [micOn, setMicOn] = useState(false);
   const {
     transcript,
@@ -37,13 +37,21 @@ const Dictaphone = () => {
     handleStopListening();
     resetTranscript();
     setPara(paragraph(3));
+    console.log(para);
   };
+
   return (
-    <div style={{ height: '100vh', backgroundSize: '100% 100%', background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)"
-  }}>
+    <div
+      style={{
+        height: '100vh',
+        backgroundSize: '100% 100%',
+        background:
+          'linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)',
+      }}
+    >
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
-        
+
         <ParallaxLayer>
           <div
             style={{
@@ -53,11 +61,15 @@ const Dictaphone = () => {
               flexDirection: 'column',
             }}
           >
-            <p style={{
-                    color: 'white',
-                    fontWeight: 500,
-                    fontSize: '2em',
-                  }}>SpeechRacer</p>
+            <p
+              style={{
+                color: 'white',
+                fontWeight: 500,
+                fontSize: '2em',
+              }}
+            >
+              SpeechRacer
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -87,7 +99,7 @@ const Dictaphone = () => {
                     fontSize: '0.8em',
                   }}
                   cursorColor="white"
-                  multiText= {[para]}
+                  multiText={[para]}
                   typeSpeed={50}
                 />
               </div>
@@ -100,11 +112,15 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p style={{
-                    color: 'white',
-                    fontWeight: 500,
-                    fontSize: '0.8em',
-                  }}>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p
+                style={{
+                  color: 'white',
+                  fontWeight: 500,
+                  fontSize: '0.8em',
+                }}
+              >
+                Microphone: {micOn ? 'on' : 'off'}
+              </p>
               <div>
                 <button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
