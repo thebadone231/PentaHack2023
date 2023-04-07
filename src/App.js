@@ -93,7 +93,7 @@ const Dictaphone = () => {
   }
 
   return (
-    <div style={{ height: '100vh', backgroundSize: '100% 100%' }}>
+    <div style={{ height: '100vh', backgroundSize: '100% 100%', background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
         <ParallaxLayer>
@@ -105,6 +105,11 @@ const Dictaphone = () => {
               flexDirection: 'column',
             }}
           >
+            <p style={{
+              color: 'white',
+              fontWeight: 500,
+              fontSize: '2em',
+            }}>SpeechRacer</p>
             <div
               style={{
                 display: 'flex',
@@ -113,6 +118,7 @@ const Dictaphone = () => {
                 height: '58vh',
                 alignItems: 'center',
                 marginTop: 40,
+                backgroundSize: 'cover',
                 backgroundImage: `url(${chalkboard})`,
               }}
             >
@@ -148,7 +154,11 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p style={{
+                color: 'white',
+                fontWeight: 500,
+                fontSize: '0.8em',
+              }}>Microphone: {micOn ? 'on' : 'off'}</p>
               <div>
                 <button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
