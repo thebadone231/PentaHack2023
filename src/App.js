@@ -1,26 +1,47 @@
-import React, { useState, Text } from 'react';
+import React, { useEffect, useState, Text } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 import { Button } from 'react-bootstrap';
+import { paragraph, sentence } from 'txtgen';
 
 import chalkboard from './assets/chalkboard.jpg';
 
 const Dictaphone = () => {
   const [micOn, setMicOn] = useState(false);
   const [score, setScore] = useState(false);
+  const [para, setPara] = useState(paragraph(2));
   const [performance, setPerformance] = useState(false);
   const [history, setHistory] = useState([]);
+  const [TypeWrite, setTypewrite] = useState()
+  const [clear, setClear] = useState(0);
 
+  let pararender = "";
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+  useEffect(()=>{
+    setTypewrite(0);
+    setClear(clear+1);
+  },[para])
 
+  useEffect(()=>{
+    setTypewrite(<TypeWriterEffect
+                  textStyle={{
+                    color: 'white',
+                    fontWeight: 500,
+                    fontSize: '0.8em',
+                  }}
+                  cursorColor="white"
+                  multiText= {[para]}
+                  typeSpeed={50}
+                />
+  )},[clear])
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
@@ -37,7 +58,7 @@ const Dictaphone = () => {
     console.log('mic is off');
     scoring(
       transcript,
-      "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it."
+      para
     );
   };
 
@@ -46,6 +67,7 @@ const Dictaphone = () => {
     resetTranscript();
     setScore(false);
     setPerformance(false);
+    setPara(paragraph(2));
   };
 
   const scoring = (s1, s2) => {
@@ -129,9 +151,13 @@ const Dictaphone = () => {
           <div
             style={{
               display: 'flex',
-              height: '100vh',
+              
               alignItems: 'center',
               flexDirection: 'column',
+              color: 'white',
+              fontWeight: 500,
+              fontSize: '0.8em',
+              marginTop: 10,
             }}
           >
             <p style={{
@@ -143,8 +169,8 @@ const Dictaphone = () => {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '43%',
-                height: '58vh',
+                width: '700px',
+                height: '250px',
                 alignItems: 'center',
                 marginTop: 40,
                 backgroundSize: '100% 100%',
@@ -158,21 +184,11 @@ const Dictaphone = () => {
                   display: 'flex',
                   alignItems: 'center',
                   color: 'white',
+                  fontSize: '1.5em',
                   marginLeft: 10,
                 }}
               >
-                <TypeWriterEffect
-                  textStyle={{
-                    color: 'white',
-                    fontWeight: 500,
-                    fontSize: '0.8em',
-                  }}
-                  cursorColor="white"
-                  multiText={[
-                    "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it.",
-                  ]}
-                  typeSpeed={50}
-                />
+                {TypeWrite}
               </div>
             </div>
 
@@ -183,12 +199,7 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p style={{
-                color: 'white',
-                fontWeight: 500,
-                fontSize: '0.8em',
-                marginTop: 10,
-              }}>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p style={{fontSize: '0.8em'}}>Microphone: {micOn ? 'on' : 'off'}</p>
               <div>
                 <Button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
@@ -204,7 +215,22 @@ const Dictaphone = () => {
                 </Button>
               </div>
             </div>
-            <p>{transcript}</p>
+            <div style={{
+                  fontSize: '1.2em',
+                  marginTop: 10,
+                }}>
+              <p>Your output</p>
+            </div>
+            <div style={{
+                  height: '100%',
+                  width: '75%',
+                  fontSize: '1.2em',
+                  marginTop: 10,
+                  textAlign: 'center',
+                }}>
+              <p>{transcript}</p>
+            </div>
+            
             <br></br>
             <p>Score: {score ? performance : '-'}</p>
             <div style={{textAlign:'center',}}>
