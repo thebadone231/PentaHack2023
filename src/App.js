@@ -6,7 +6,6 @@ import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 import { Button } from 'react-bootstrap';
 import { paragraph, sentence } from 'txtgen';
-
 import chalkboard from './assets/chalkboard.jpg';
 
 const Dictaphone = () => {
@@ -114,19 +113,6 @@ const Dictaphone = () => {
       setHistory((prevHistory) => [...prevHistory, score]);
     }
   }
-
-  const getBackgroundColor = (score) => {
-    if (score >= 90) {
-      return 'green';
-    } else if (score >= 70) {
-      return 'yellow';
-    } else if (score >= 50) {
-      return 'orange';
-    } else {
-      return 'red';
-    }
-  };
-
   const displayhistory = history.map((item, index) => (
     <li
       key={index}
@@ -134,7 +120,7 @@ const Dictaphone = () => {
         width: '600px',
         paddingTop: '10px',
         paddingBottom: '10px',
-        backgroundColor: getBackgroundColor(item),
+        background: 'red',
       }}
     >
       {item}
@@ -142,9 +128,14 @@ const Dictaphone = () => {
   ));
 
   return (
-    <div style={{ height: '100vh', 
-                  backgroundSize: '100% 100%', 
-                  background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
+    <div
+      style={{
+        height: '100vh',
+        backgroundSize: '100% 100%',
+        background:
+          'linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)',
+      }}
+    >
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
         <ParallaxLayer>
@@ -160,11 +151,15 @@ const Dictaphone = () => {
               marginTop: 10,
             }}
           >
-            <p style={{
-              color: 'white',
-              fontWeight: 500,
-              fontSize: '2em',
-            }}>SpeechRacer</p>
+            <p
+              style={{
+                color: 'white',
+                fontWeight: 500,
+                fontSize: '2em',
+              }}
+            >
+              SpeechRacer
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -233,9 +228,15 @@ const Dictaphone = () => {
             
             <br></br>
             <p>Score: {score ? performance : '-'}</p>
-            <div style={{textAlign:'center',}}>
+            <div style={{ textAlign: 'center' }}>
               {history.length > 0 ? <p>Score History</p> : <p></p>}
-              <ul style={{listStyle: 'none', textAlign:'center',paddingLeft :'0px' }}>
+              <ul
+                style={{
+                  listStyle: 'none',
+                  textAlign: 'center',
+                  paddingLeft: '0px',
+                }}
+              >
                 {displayhistory}
               </ul>
             </div>
