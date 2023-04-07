@@ -189,9 +189,6 @@ const Dictaphone = () => {
               <ul style={{listStyle: 'none', textAlign:'center',paddingLeft :'0px' }}>
                 {displayhistory}
               </ul>
-              <button onClick={() => updateScore(score)}>
-                Update Score
-              </button>
             </div>
           </div>
         </ParallaxLayer>
