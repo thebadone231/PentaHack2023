@@ -1,4 +1,4 @@
-import React, { useState, Text } from 'react';
+import React, { useState, useEffect, Text } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
@@ -6,13 +6,14 @@ import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 
 import chalkboard from './assets/chalkboard.jpg';
-
+import { paragraph, sentence } from 'txtgen';
 const Dictaphone = () => {
+  const [para, setPara] = useState(paragraph(3));
   const [micOn, setMicOn] = useState(false);
-  const [score, setScore] = useState(false);
-  const [performance, setPerformance] = useState(false);
-  const [history, setHistory] = useState([]);
+  const [TypeWrite, setTypewrite] = useState();
+  const [clear, setClear] = useState(0);
 
+  let pararender = '';
   const {
     transcript,
     listening,
@@ -20,6 +21,41 @@ const Dictaphone = () => {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
+  // const TypeWrite = () => {
+  //   return(
+  //     <TypeWriterEffect
+  //       textStyle={{
+  //         color: 'white',
+  //         fontWeight: 500,
+  //         fontSize: '0.8em',
+  //       }}
+  //       cursorColor="white"
+  //       multiText= {para}
+  //       typeSpeed={50}
+  //     />
+  //   )
+  // }
+
+  //Clear and rereference TypeWriterEffect Componenet
+  useEffect(() => {
+    setTypewrite(0);
+    setClear(clear + 1);
+  }, [para]);
+
+  useEffect(() => {
+    setTypewrite(
+      <TypeWriterEffect
+        textStyle={{
+          color: 'white',
+          fontWeight: 500,
+          fontSize: '0.8em',
+        }}
+        cursorColor="white"
+        multiText={[para]}
+        typeSpeed={50}
+      />
+    );
+  }, [clear]);
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
@@ -43,47 +79,8 @@ const Dictaphone = () => {
   const handleResetTranscript = () => {
     handleStopListening();
     resetTranscript();
-    setScore(false);
-    setPerformance(false);
-  };
-
-  const scoring = (s1, s2) => {
-    // Convert both strings to lowercase
-    s1 = s1.toLowerCase();
-    s2 = s2.toLowerCase();
-
-    // Initialize the distance matrix
-    var d = [];
-    for (var i = 0; i <= s1.length; i++) {
-      d[i] = [];
-      d[i][0] = i;
-    }
-    for (var j = 0; j <= s2.length; j++) {
-      d[0][j] = j;
-    }
-
-    // Fill in the rest of the matrix
-    for (var i = 1; i <= s1.length; i++) {
-      for (var j = 1; j <= s2.length; j++) {
-        if (s1[i - 1] == s2[j - 1]) {
-          d[i][j] = d[i - 1][j - 1];
-        } else {
-          d[i][j] = Math.min(
-            d[i - 1][j] + 1, // Deletion
-            d[i][j - 1] + 1, // Insertion
-            d[i - 1][j - 1] + 1 // Substitution
-          );
-        }
-      }
-    }
-
-    // Return the Levenshtein distance
-    let score = Math.round(
-      (1 - d[s1.length][s2.length] / Math.max(s1.length, s2.length)) * 100
-    );
-    setScore(score);
-    setPerformance(score + '/100');
-    updateScore(score);
+    setPara(paragraph(3));
+    console.log(para);
   };
 
   function updateScore(score) {
@@ -92,13 +89,31 @@ const Dictaphone = () => {
     }
   }
   const displayhistory = history.map((item, index) => (
-    <li key={index} style={{width:'600px',paddingTop: '10px', paddingBottom:'10px', background:'red'}}>{item}</li>
+    <li
+      key={index}
+      style={{
+        width: '600px',
+        paddingTop: '10px',
+        paddingBottom: '10px',
+        background: 'red',
+      }}
+    >
+      {item}
+    </li>
   ));
 
   return (
-    <div style={{ height: '100vh', backgroundSize: '100% 100%', background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
+    <div
+      style={{
+        height: '100vh',
+        backgroundSize: '100% 100%',
+        background:
+          'linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)',
+      }}
+    >
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
+
         <ParallaxLayer>
           <div
             style={{
@@ -108,11 +123,15 @@ const Dictaphone = () => {
               flexDirection: 'column',
             }}
           >
-            <p style={{
-              color: 'white',
-              fontWeight: 500,
-              fontSize: '2em',
-            }}>SpeechRacer</p>
+            <p
+              style={{
+                color: 'white',
+                fontWeight: 500,
+                fontSize: '2em',
+              }}
+            >
+              SpeechRacer
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -135,18 +154,7 @@ const Dictaphone = () => {
                   marginLeft: 10,
                 }}
               >
-                <TypeWriterEffect
-                  textStyle={{
-                    color: 'white',
-                    fontWeight: 500,
-                    fontSize: '0.8em',
-                  }}
-                  cursorColor="white"
-                  multiText={[
-                    "The thing that's great about this job is the time sourcing the items involves no traveling. I just look online to buy it.",
-                  ]}
-                  typeSpeed={50}
-                />
+                {TypeWrite}
               </div>
             </div>
 
@@ -157,15 +165,11 @@ const Dictaphone = () => {
                 alignItems: 'center',
               }}
             >
-              <p style={{
-                color: 'white',
-                fontWeight: 500,
-                fontSize: '0.8em',
-              }}>Microphone: {micOn ? 'on' : 'off'}</p>
+              <p>Microphone: {micOn ? 'on' : 'off'}</p>
               <div>
                 <button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
-                </button>
+                </button>{' '}
                 <button
                   style={{ marginRight: 20 }}
                   onClick={handleStopListening}
@@ -180,14 +184,18 @@ const Dictaphone = () => {
             <p>{transcript}</p>
             <br></br>
             <p>Score: {score ? performance : '-'}</p>
-            <div style={{textAlign:'center',}}>
+            <div style={{ textAlign: 'center' }}>
               {history.length > 0 ? <p>Score History</p> : <p></p>}
-              <ul style={{listStyle: 'none', textAlign:'center',paddingLeft :'0px' }}>
+              <ul
+                style={{
+                  listStyle: 'none',
+                  textAlign: 'center',
+                  paddingLeft: '0px',
+                }}
+              >
                 {displayhistory}
               </ul>
-              <button onClick={() => updateScore(score)}>
-                Update Score
-              </button>
+              <button onClick={() => updateScore(score)}>Update Score</button>
             </div>
           </div>
         </ParallaxLayer>
