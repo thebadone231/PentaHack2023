@@ -4,6 +4,7 @@ import SpeechRecognition, {
 } from 'react-speech-recognition';
 import TypeWriterEffect from 'react-typewriter-effect';
 import { Parallax, ParallaxLayer } from '@react-spring/parallax';
+import { Button } from 'react-bootstrap';
 
 import chalkboard from './assets/chalkboard.jpg';
 
@@ -93,7 +94,9 @@ const Dictaphone = () => {
   }
 
   return (
-    <div style={{ height: '100vh', backgroundSize: '100% 100%', background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
+    <div style={{ height: '100vh', 
+                  backgroundSize: '100% 100%', 
+                  background: "linear-gradient(60deg, rgba(2,0,36,1) 10%, rgba(9,104,121,0.8) 50%, rgba(0,212,255,1) 90%)" }}>
       <Parallax pages={5}>
         {/*page 1 - typewriter effect*/}
         <ParallaxLayer>
@@ -118,7 +121,7 @@ const Dictaphone = () => {
                 height: '58vh',
                 alignItems: 'center',
                 marginTop: 40,
-                backgroundSize: 'cover',
+                backgroundSize: '100% 100%',
                 backgroundImage: `url(${chalkboard})`,
               }}
             >
@@ -158,20 +161,21 @@ const Dictaphone = () => {
                 color: 'white',
                 fontWeight: 500,
                 fontSize: '0.8em',
+                marginTop: 10,
               }}>Microphone: {micOn ? 'on' : 'off'}</p>
               <div>
-                <button style={{ marginRight: 20 }} onClick={handleListening}>
+                <Button style={{ marginRight: 20 }} onClick={handleListening}>
                   Start
-                </button>
-                <button
+                </Button>
+                <Button
                   style={{ marginRight: 20 }}
                   onClick={handleStopListening}
                 >
                   Stop
-                </button>
-                <button style={{}} onClick={handleResetTranscript}>
+                </Button>
+                <Button style={{}} onClick={handleResetTranscript}>
                   Reset
-                </button>
+                </Button>
               </div>
             </div>
             <p>{transcript}</p>
