@@ -10,6 +10,10 @@ import { paragraph, sentence } from 'txtgen';
 const Dictaphone = () => {
   const [para, setPara] = useState(paragraph(3));
   const [micOn, setMicOn] = useState(false);
+  const [TypeWrite, setTypewrite] = useState();
+  const [clear, setClear] = useState(0);
+
+  let pararender = '';
   const {
     transcript,
     listening,
@@ -17,6 +21,41 @@ const Dictaphone = () => {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
+  // const TypeWrite = () => {
+  //   return(
+  //     <TypeWriterEffect
+  //       textStyle={{
+  //         color: 'white',
+  //         fontWeight: 500,
+  //         fontSize: '0.8em',
+  //       }}
+  //       cursorColor="white"
+  //       multiText= {para}
+  //       typeSpeed={50}
+  //     />
+  //   )
+  // }
+
+  //Clear and rereference TypeWriterEffect Componenet
+  useEffect(() => {
+    setTypewrite(0);
+    setClear(clear + 1);
+  }, [para]);
+
+  useEffect(() => {
+    setTypewrite(
+      <TypeWriterEffect
+        textStyle={{
+          color: 'white',
+          fontWeight: 500,
+          fontSize: '0.8em',
+        }}
+        cursorColor="white"
+        multiText={[para]}
+        typeSpeed={50}
+      />
+    );
+  }, [clear]);
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
@@ -92,16 +131,7 @@ const Dictaphone = () => {
                   marginLeft: 10,
                 }}
               >
-                <TypeWriterEffect
-                  textStyle={{
-                    color: 'white',
-                    fontWeight: 500,
-                    fontSize: '0.8em',
-                  }}
-                  cursorColor="white"
-                  multiText={[para]}
-                  typeSpeed={50}
-                />
+                {TypeWrite}
               </div>
             </div>
 
