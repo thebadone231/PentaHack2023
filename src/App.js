@@ -83,6 +83,7 @@ const Dictaphone = () => {
     );
     setScore(score);
     setPerformance(score + '/100');
+    updateScore(score);
   };
 
   function updateScore(score) {
@@ -90,9 +91,6 @@ const Dictaphone = () => {
       setHistory((prevHistory) => [...prevHistory, score]);
     }
   }
-  const displayhistory = history.map((value) => {
-    return <p>{value}</p>;
-  });
 
   return (
     <div style={{ height: '100vh', backgroundSize: '100% 100%' }}>
@@ -174,9 +172,6 @@ const Dictaphone = () => {
               {history.map((item, index) => (
                 <p key={index}>{item}</p>
               ))}
-              <button style={{}} onClick={() => updateScore(score)}>
-                Update Score
-              </button>
             </div>
           </div>
         </ParallaxLayer>
